@@ -36,6 +36,7 @@ async function getCategory(catId) {
   return { title: response.data.title, clues: clues };
 }
 
+// Fills starting game board and fetches all answers and questions to store in clueList
 async function fillTable(catArr) {
   for (let cat = 1; cat <= 6; cat++) {
     let catTitle = await getCategory(categories[cat - 1]);
@@ -56,6 +57,7 @@ async function fillTable(catArr) {
   }
 }
 
+// Handles functionality for all clicks on start/restart button and question boxes regardless of state.
 async function handleClick(e) {
   if (e.target.dataset.state === "start") {
     let cat = clueList[e.target.dataset.col - 1];
@@ -84,6 +86,7 @@ function hideLoadingView() {
   $("#play-button").prop("disabled", false);
 }
 
+// Shows loading screen while game is setup with a minimum length of loading screen for UX
 async function setupAndStart() {
   $(".container").hide();
   showLoadingView();
