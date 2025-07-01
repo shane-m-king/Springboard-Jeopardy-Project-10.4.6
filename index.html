@@ -6,16 +6,27 @@
         content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Jeopardy</title>
-  <link href="https://fonts.googleapis.com/css?family=Copse&display=swap"
-        rel="stylesheet">
   <link rel="stylesheet" href="jeopardy.css">
 </head>
 <body>
-
+      <main>
+            <h1>THIS IS JEOPARDY!</h1>
+            <div>
+                  <button type="button" class="button" id="play-button">Start!</button>
+            </div>
+            <div class="spacer" ></div>
+            <div class="container">
+                  <div class="cats" id="cats"></div>
+                  <div class="spacer"></div>
+                  <div class="boxes" id="boxes"></div>
+            </div>
+      </main>
+      <div id="loading" >
+            <h2>Loading...</h2>
+      </div>
 <script src="https://unpkg.com/jquery"></script>
 <script src="https://unpkg.com/axios/dist/axios.js"></script>
 <script src="https://unpkg.com/lodash"></script>
 <script src="jeopardy.js"></script>
-
 </body>
 </html>

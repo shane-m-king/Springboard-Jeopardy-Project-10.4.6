@@ -1,7 +1,91 @@
-/* some colors you may find useful:
-  #115ff4
-  #060ce9
-  #28a200
-  #8d2ab5
-  #74119c
-*/
+body {
+  background-color: #115ff4;
+  color:white;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 2px;
+  text-align: center;
+  text-shadow: 2px 2px 0 rgb(17, 10, 117);
+}
+
+.cats {
+  display: grid;
+  font-size: 1.6rem;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: 100px;
+  justify-content: center;
+}
+
+.category {
+  align-items: center;
+  background-color: #060ce9;
+  border: 2px solid black;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  letter-spacing: 1px;
+}
+
+.boxes {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  justify-content: center;
+}
+
+.box {
+  align-items: center;
+  background-color: #060ce9;
+  border: 2px solid white;
+  box-sizing: border-box;
+  color: yellow;
+  display: flex;
+  font-size: 2.5rem;
+  height: 115px;
+  justify-content: center;
+  letter-spacing: 2px;
+  overflow: hidden;                     
+  padding: 10px;                 
+  text-overflow: ellipsis;
+  width: 100%; 
+  overflow-wrap: break-word;
+}
+
+.box:hover {background-color: #040aaa}
+
+.spacer {
+  height: 20px;
+}
+
+#play-button {
+    background-color:#060ce9;
+    border: 2px solid black;
+    box-shadow: 0 4px white;
+    color:white;
+    display: inline-block;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 22px;
+    font-style: oblique;
+    padding: 12px 18px;
+}
+
+#play-button:hover {background-color: #040aaa}
+
+#play-button:active {
+  background-color: #040aaa;
+  box-shadow: 0 2px rgba(241, 241, 239, 0.904);
+  transform: translateY(4px);
+}
+
+#loading {
+  background-color: rgba(28, 8, 211, 0.8);
+  border-radius: 50px;
+  color: yellow;
+  display: none;
+  font-size: 2rem;
+  left: 50%;
+  padding: 30px;
+  position: fixed;
+  top: 50%;;
+  transform: translate(-50%, -50%);
+}

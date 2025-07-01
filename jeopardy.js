@@ -1,98 +1,99 @@
-// categories is the main data structure for the app; it looks like this:
+let categories = []; // Stores category IDs
+let clueList = []; // Stores an array of {categoryTitle: title, clues: [array of clues]}, one for each category
+const cats = document.getElementById("cats");
+const boxes = document.getElementById("boxes");
 
-//  [
-//    { title: "Math",
-//      clues: [
-//        {question: "2+2", answer: 4, showing: null},
-//        {question: "1+1", answer: 2, showing: null}
-//        ...
-//      ],
-//    },
-//    { title: "Literature",
-//      clues: [
-//        {question: "Hamlet Author", answer: "Shakespeare", showing: null},
-//        {question: "Bell Jar Author", answer: "Plath", showing: null},
-//        ...
-//      ],
-//    },
-//    ...
-//  ]
+$("#play-button").click(function (e) {
+  handleClick(e);
+  setupAndStart();
+});
+$(".boxes").on("click", ".box", handleClick);
 
-let categories = [];
-
-
-/** Get NUM_CATEGORIES random category from API.
- *
- * Returns array of category ids
- */
-
-function getCategoryIds() {
+// Picks 6 categories at random from provided API
+async function getCategoryIds() {
+  categories = [];
+  const response = await axios.get(
+    "https://rithm-jeopardy.herokuapp.com/api/categories?count=10"
+  );
+  for (let cat of response.data) {
+    categories.push(cat.id);
+  }
+  categories = _.sampleSize(categories, 6);
 }
 
-/** Return object with data about a category:
- *
- *  Returns { title: "Math", clues: clue-array }
- *
- * Where clue-array is:
- *   [
- *      {question: "Hamlet Author", answer: "Shakespeare", showing: null},
- *      {question: "Bell Jar Author", answer: "Plath", showing: null},
- *      ...
- *   ]
- */
-
-function getCategory(catId) {
+// Gets a category name and all clues given a category ID
+async function getCategory(catId) {
+  const clues = [];
+  const response = await axios.get(
+    `https://rithm-jeopardy.herokuapp.com/api/category?id=${catId}`
+  );
+  for (let clue of response.data.clues) {
+    clues.push({
+      question: clue.question,
+      answer: clue.answer,
+    });
+  }
+  return { title: response.data.title, clues: clues };
 }
 
-/** Fill the HTML table#jeopardy with the categories & cells for questions.
- *
- * - The <thead> should be filled w/a <tr>, and a <td> for each category
- * - The <tbody> should be filled w/NUM_QUESTIONS_PER_CAT <tr>s,
- *   each with a question for each category in a <td>
- *   (initally, just show a "?" where the question/answer would go.)
- */
+async function fillTable(catArr) {
+  for (let cat = 1; cat <= 6; cat++) {
+    let catTitle = await getCategory(categories[cat - 1]);
+    clueList.push(catTitle);
+    $(".cats").append(
+      `<div class="category">${catTitle.title.toUpperCase()}</div>`
+    );
+  }
 
-async function fillTable() {
+  for (let row = 1; row <= 5; row++) {
+    for (let col = 1; col <= 6; col++) {
+      $(".boxes").append(
+        `<div class="box" data-col="${col}" data-row="${row}" data-state="start">$${
+          row * 2
+        }00</div>`
+      );
+    }
+  }
 }
 
-/** Handle clicking on a clue: show the question or answer.
- *
- * Uses .showing property on clue to determine what to show:
- * - if currently null, show question & set .showing to "question"
- * - if currently "question", show answer & set .showing to "answer"
- * - if currently "answer", ignore click
- * */
-
-function handleClick(evt) {
+async function handleClick(e) {
+  if (e.target.dataset.state === "start") {
+    let cat = clueList[e.target.dataset.col - 1];
+    e.target.style.color = "white";
+    e.target.style.fontSize = "0.9rem";
+    e.target.innerHTML = cat.clues[e.target.dataset.row - 1].question;
+    e.target.dataset.state = "question";
+  } else if (e.target.dataset.state === "question") {
+    let cat = clueList[e.target.dataset.col - 1];
+    e.target.style.fontSize = "1.5rem";
+    e.target.style.backgroundColor = "green";
+    e.target.innerHTML = cat.clues[e.target.dataset.row - 1].answer;
+    e.target.dataset.state = "answer";
+  } else if (e.target.innerHTML === "Start!") {
+    e.target.innerHTML = "Restart!";
+  }
 }
-
-/** Wipe the current Jeopardy board, show the loading spinner,
- * and update the button used to fetch data.
- */
 
 function showLoadingView() {
-
+  $("#loading").show();
+  $("#play-button").prop("disabled", true);
 }
-
-/** Remove the loading spinner and update the button used to fetch data. */
 
 function hideLoadingView() {
+  $("#loading").hide();
+  $("#play-button").prop("disabled", false);
 }
-
-/** Start game:
- *
- * - get random category Ids
- * - get data for each category
- * - create HTML table
- * */
 
 async function setupAndStart() {
+  $(".container").hide();
+  showLoadingView();
+  await new Promise((wait) => setTimeout(wait, 100));
+  categories = [];
+  clueList = [];
+  cats.innerHTML = "";
+  boxes.innerHTML = "";
+  await getCategoryIds();
+  await fillTable(categories);
+  hideLoadingView();
+  $(".container").show();
 }
-
-/** On click of start / restart button, set up game. */
-
-// TODO
-
-/** On page load, add event handler for clicking clues */
-
-// TODO
